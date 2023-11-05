@@ -4,7 +4,7 @@ namespace Yolk.Geometry.Shapes
 {
     public static class ShapeFactory
     {
-        public static List<Segment> CreateShape(List<Point> map)
+        public static List<Segment> CreateShape(List<PointF> map)
         {
             if (map.Count < 3)
             {

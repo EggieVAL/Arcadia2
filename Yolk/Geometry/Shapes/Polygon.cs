@@ -9,11 +9,11 @@ namespace Yolk.Geometry.Shapes
     [DataContract]
     public struct Polygon : IEquatable<Polygon>
     {
-        private List<Point> map;
+        private List<PointF> map;
 
-        public Polygon(List<Point> map)
+        public Polygon(List<PointF> map)
         {
-            this.map = new List<Point>(map);
+            this.map = new List<PointF>(map);
         }
 
         public readonly float Area
@@ -25,7 +25,7 @@ namespace Yolk.Geometry.Shapes
 
                 for (int i = 0; i < iterate; ++i)
                 {
-                    area += Point.CrossProduct(map[i], map[i+1]);
+                    area += PointF.CrossProduct(map[i], map[i+1]);
                 }
                 return 0.5f * MathF.Abs(area);
             }
@@ -33,7 +33,7 @@ namespace Yolk.Geometry.Shapes
 
         public readonly List<Segment> Edges => ShapeFactory.CreateShape(map);
 
-        public readonly List<Point> Map => new(map);
+        public readonly List<PointF> Map => new(map);
 
         public readonly float Perimeter
         {
@@ -72,7 +72,7 @@ namespace Yolk.Geometry.Shapes
             return !(polygon == other);
         }
 
-        public readonly bool ContainsPoint(Point point)
+        public readonly bool ContainsPoint(PointF point)
         {
             return ContainsPoint(point.X, point.Y);
         }
@@ -84,7 +84,7 @@ namespace Yolk.Geometry.Shapes
 
             foreach (Segment edge in Edges)
             {
-                Point? intersect = Ray.Cast(ray, edge);
+                PointF? intersect = Ray.Cast(ray, edge);
                 edgesPassed += (intersect is null) ? 0 : 1;
             }
             return edgesPassed % 2 == 1;
@@ -106,7 +106,7 @@ namespace Yolk.Geometry.Shapes
             unchecked
             {
                 int hash = 13;
-                foreach (Point point in map)
+                foreach (PointF point in map)
                 {
                     hash = (hash * 7) + point.GetHashCode();
                 }
@@ -131,7 +131,7 @@ namespace Yolk.Geometry.Shapes
             return true;
         }
 
-        public void Translate(Point delta)
+        public void Translate(PointF delta)
         {
             for (int i = 0; i < map.Count; ++i)
             {
@@ -141,7 +141,7 @@ namespace Yolk.Geometry.Shapes
 
         public void Translate(float dx, float dy)
         {
-            Translate(new Point(dx, dy));
+            Translate(new PointF(dx, dy));
         }
     }
 }

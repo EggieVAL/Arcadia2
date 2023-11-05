@@ -10,42 +10,42 @@ namespace Yolk.Geometry
     public struct Line : IEquatable<Line>
     {
         [DataMember]
-        public Point PointA;
+        public PointF PointA;
 
         [DataMember]
-        public Point PointB;
+        public PointF PointB;
 
-        public Line(Point a, Point b)
+        public Line(PointF a, PointF b)
         {
             PointA = a;
             PointB = b;
         }
 
-        public Line(Point point, float deltaY, float deltaX)
+        public Line(PointF point, float deltaY, float deltaX)
         {
             PointA = point;
-            PointB = point + new Point(deltaX, deltaY);
+            PointB = point + new PointF(deltaX, deltaY);
         }
 
-        public Line(Point point, float slope) : this(point, slope, 1)
+        public Line(PointF point, float slope) : this(point, slope, 1)
         {
         }
 
-        public Line(Point point, Vector direction) : this(point, direction.Y, direction.X)
+        public Line(PointF point, Vector direction) : this(point, direction.Y, direction.X)
         {
         }
 
-        public static Line Identity => new(Point.Origin, Vector.Unit);
+        public static Line Identity => new(PointF.Origin, Vector.Unit);
 
-        public static Line XAxis => new(Point.Origin, Vector.UnitX);
+        public static Line XAxis => new(PointF.Origin, Vector.UnitX);
 
-        public static Line YAxis => new(Point.Origin, Vector.UnitY);
+        public static Line YAxis => new(PointF.Origin, Vector.UnitY);
 
         public readonly float Slope
         {
             get
             {
-                Point delta = PointB - PointA;
+                PointF delta = PointB - PointA;
                 return Floats.IsEqual(delta.X, 0f)
                     ? float.PositiveInfinity
                     : delta.Y / delta.X;
@@ -101,28 +101,28 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Cast(Line line, Line other)
+        public static PointF? Cast(Line line, Line other)
         {
             return Intersects(line, other);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Cast(Line line, Ray ray)
+        public static PointF? Cast(Line line, Ray ray)
         {
             return Ray.Cast(ray, line);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Cast(Line line, Segment segment)
+        public static PointF? Cast(Line line, Segment segment)
         {
             if (Floats.IsEqual(line.Slope, segment.Slope))
             {
                 return null;
             }
 
-            Point dc = segment.PointB - segment.PointA;
-            Point ac = line.PointA - segment.PointA;
-            Point ba = line.PointB - line.PointA;
+            PointF dc = segment.PointB - segment.PointA;
+            PointF ac = line.PointA - segment.PointA;
+            PointF ba = line.PointB - line.PointA;
 
             float t = ((dc.X * ac.Y) - (dc.Y * ac.X)) / ((dc.Y * ba.X) - (dc.X * ba.Y));
             float u = (ac.X + (ba.X * t)) / dc.X;
@@ -147,7 +147,7 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float DistanceBetween(Line line, Point point)
+        public static float DistanceBetween(Line line, PointF point)
         {
             if (IsVertical(line))
             {
@@ -162,16 +162,16 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Intersects(Line line, Line other)
+        public static PointF? Intersects(Line line, Line other)
         {
             if (IsParallel(line, other))
             {
                 return null;
             }
 
-            Point dc = other.PointB - other.PointA;
-            Point ac = line.PointA - other.PointA;
-            Point ba = line.PointB - other.PointA;
+            PointF dc = other.PointB - other.PointA;
+            PointF ac = line.PointA - other.PointA;
+            PointF ba = line.PointB - other.PointA;
 
             float t = ((dc.X * ac.Y) - (dc.Y * ac.X))
                     / ((dc.Y * ba.X) - (dc.X * ba.Y));
@@ -212,17 +212,17 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point Lerp(Line line, float amount)
+        public static PointF Lerp(Line line, float amount)
         {
-            return Point.Lerp(line.PointA, line.PointB, amount);
+            return PointF.Lerp(line.PointA, line.PointB, amount);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Line ReflectOverXAxis(Line line)
         {
             return new Line(
-                Point.ReflectOverXAxis(line.PointA),
-                Point.ReflectOverXAxis(line.PointB)
+                PointF.ReflectOverXAxis(line.PointA),
+                PointF.ReflectOverXAxis(line.PointB)
             );
         }
 
@@ -230,8 +230,8 @@ namespace Yolk.Geometry
         public static Line ReflectOverYAxis(Line line)
         {
             return new Line(
-                Point.ReflectOverYAxis(line.PointA),
-                Point.ReflectOverYAxis(line.PointB)
+                PointF.ReflectOverYAxis(line.PointA),
+                PointF.ReflectOverYAxis(line.PointB)
             );
         }
 
@@ -268,7 +268,7 @@ namespace Yolk.Geometry
             return $"{{PointA:{PointA}, PointB:{PointB}}}";
         }
 
-        public void Translate(Point delta)
+        public void Translate(PointF delta)
         {
             PointA.Translate(delta);
             PointB.Translate(delta);

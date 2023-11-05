@@ -193,7 +193,7 @@ namespace Yolk.GameObjects
             Z = MaximumZ;
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (KeyListener.IsKeyPressed(Keys.OemPlus))
             {

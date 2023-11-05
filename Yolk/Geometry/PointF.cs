@@ -7,150 +7,151 @@ using Yolk.Engine;
 namespace Yolk.Geometry
 {
     [DataContract]
-    public struct Point : IEquatable<Point>
+    public struct PointF : IEquatable<PointF>
     {
         [DataMember]
-        public int X;
+        public float X;
 
         [DataMember]
-        public int Y;
+        public float Y;
 
         [DataMember]
         public bool Inclusive;
 
-        public Point(int x, int y, bool inclusive)
+        public PointF(float x, float y, bool inclusive)
         {
             X = x;
             Y = y;
             Inclusive = inclusive;
         }
 
-        public Point(int x, int y) : this(x, y, true)
+        public PointF(float x, float y) : this(x, y, true)
         {
         }
 
-        public Point(int value, bool inclusive) : this(value, value, inclusive)
+        public PointF(float value, bool inclusive) : this(value, value, inclusive)
         {
         }
 
-        public Point(int value) : this(value, true)
+        public PointF(float value) : this(value, true)
         {
         }
 
-        public static Point Origin => new(0);
+        public static PointF Origin => new(0);
 
-        public static explicit operator Microsoft.Xna.Framework.Point(Point point)
+        public static explicit operator Microsoft.Xna.Framework.Point(PointF point)
         {
-            return new Microsoft.Xna.Framework.Point(point.X, point.Y);
+            return new Microsoft.Xna.Framework.Point((int) point.X, (int) point.Y);
         }
 
-        public static implicit operator PointF(Point point)
+        public static explicit operator Point(PointF point)
         {
-            return new PointF(point.X, point.Y, point.Inclusive);
+            return new Point((int) point.X, (int) point.Y, point.Inclusive);
         }
 
-        public static explicit operator System.Drawing.Point(Point point)
+        public static explicit operator System.Drawing.Point(PointF point)
         {
-            return new System.Drawing.Point(point.X, point.Y);
+            return new System.Drawing.Point((int) point.X, (int) point.Y);
         }
 
-        public static explicit operator System.Drawing.PointF(Point point)
+        public static explicit operator System.Drawing.PointF(PointF point)
         {
             return new System.Drawing.PointF(point.X, point.Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator +(Point addend1, Point addend2)
+        public static PointF operator +(PointF addend1, PointF addend2)
         {
-            return new Point(
+            return new PointF(
                 addend1.X + addend2.X,
                 addend1.Y + addend2.Y
             );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator +(Point addend1, int addend2)
+        public static PointF operator +(PointF addend1, float addend2)
         {
-            return addend1 + new Point(addend2);
+            return addend1 + new PointF(addend2);
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator +(int addend1, Point addend2)
+        public static PointF operator +(float addend1, PointF addend2)
         {
             return addend2 + addend1;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator -(Point minuend, Point subtrahend)
+        public static PointF operator -(PointF minuend, PointF subtrahend)
         {
-            return new Point(
+            return new PointF(
                 minuend.X - subtrahend.X,
                 minuend.Y - subtrahend.Y
             );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator -(Point minuend, int subtrahend)
+        public static PointF operator -(PointF minuend, float subtrahend)
         {
-            return minuend - new Point(subtrahend);
+            return minuend - new PointF(subtrahend);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator -(int minuend, Point subtrahend)
+        public static PointF operator -(float minuend, PointF subtrahend)
         {
-            return new Point(minuend) - subtrahend;
+            return new PointF(minuend) - subtrahend;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator -(Point point)
+        public static PointF operator -(PointF point)
         {
             return Origin - point;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator *(Point multiplicand, Point multiplier)
+        public static PointF operator *(PointF multiplicand, PointF multiplier)
         {
-            return new Point(
+            return new PointF(
                 multiplicand.X * multiplier.X,
                 multiplicand.Y * multiplier.Y
             );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator *(Point multiplicand, int multiplier)
+        public static PointF operator *(PointF multiplicand, float multiplier)
         {
-            return multiplicand * new Point(multiplier);
+            return multiplicand * new PointF(multiplier);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator *(int multiplicand, Point multiplier)
+        public static PointF operator *(float multiplicand, PointF multiplier)
         {
             return multiplier * multiplicand;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator /(Point dividend, Point divisor)
+        public static PointF operator /(PointF dividend, PointF divisor)
         {
-            return new Point(
+            return new PointF(
                 dividend.X / divisor.X,
                 dividend.Y / divisor.Y
             );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator /(Point dividend, int divisor)
+        public static PointF operator /(PointF dividend, float divisor)
         {
-            return dividend / new Point(divisor);
+            return dividend / new PointF(divisor);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point operator /(int dividend, Point divisor)
+        public static PointF operator /(float dividend, PointF divisor)
         {
-            return new Point(dividend) / divisor;
+            return new PointF(dividend) / divisor;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(Point point, Point other)
+        public static bool operator ==(PointF point, PointF other)
         {
             return point.X == other.X
                 && point.Y == other.Y
@@ -158,96 +159,96 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(Point point, Point other)
+        public static bool operator !=(PointF point, PointF other)
         {
             return !(point == other);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point Add(Point addend1, Point addend2)
+        public static PointF Add(PointF addend1, PointF addend2)
         {
             return addend1 + addend2;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int CrossProduct(Point point, Point other)
+        public static float CrossProduct(PointF point, PointF other)
         {
             return (point.X * other.Y) - (point.Y * other.X);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Distance(Point point, Point other)
+        public static float Distance(PointF point, PointF other)
         {
             return MathF.Sqrt(DistanceSquared(point, other));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int DistanceSquared(Point point, Point other)
+        public static float DistanceSquared(PointF point, PointF other)
         {
-            Point difference = point - other;
+            PointF difference = point - other;
             return DotProduct(difference, difference);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point Divide(Point dividend, Point divisor)
+        public static PointF Divide(PointF dividend, PointF divisor)
         {
             return dividend / divisor;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int DotProduct(Point point, Point other)
+        public static float DotProduct(PointF point, PointF other)
         {
             return (point.X * other.Y) + (point.Y * other.Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point Lerp(Point point, Point other, int amount)
+        public static PointF Lerp(PointF point, PointF other, float amount)
         {
             return point + ((other - point) * amount);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point Multiply(Point multiplicand, Point multiplier)
+        public static PointF Multiply(PointF multiplicand, PointF multiplier)
         {
             return multiplicand * multiplier;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point Subtract(Point minuend, Point subtrahend)
+        public static PointF Subtract(PointF minuend, PointF subtrahend)
         {
             return minuend - subtrahend;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point Negate(Point point)
+        public static PointF Negate(PointF point)
         {
             return -point;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point ReflectOverXAxis(Point point)
+        public static PointF ReflectOverXAxis(PointF point)
         {
-            return new Point(point.X, -point.Y);
+            return new PointF(point.X, -point.Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point ReflectOverYAxis(Point point)
+        public static PointF ReflectOverYAxis(PointF point)
         {
-            return new Point(-point.X, point.Y);
+            return new PointF(-point.X, point.Y);
         }
 
-        public readonly Point ClosedPoint()
+        public readonly PointF ClosedPoint()
         {
-            return new Point(X, Y, true);
+            return new PointF(X, Y, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override readonly bool Equals([NotNullWhen(true)] object obj)
         {
-            return (obj is Point other) && Equals(other);
+            return (obj is PointF other) && Equals(other);
         }
 
-        public readonly bool Equals(Point other)
+        public readonly bool Equals(PointF other)
         {
             return this == other;
         }
@@ -264,19 +265,21 @@ namespace Yolk.Geometry
             }
         }
 
-        public readonly bool IsIdentical(Point other)
+        public readonly bool IsIdentical(PointF other)
         {
-            return this == other;
+            return Floats.IsEqual(X, other.X)
+                && Floats.IsEqual(Y, other.Y)
+                && Inclusive == other.Inclusive;
         }
 
-        public readonly Point OpenPoint()
+        public readonly PointF OpenPoint()
         {
-            return new Point(X, Y, false);
+            return new PointF(X, Y, false);
         }
 
-        public readonly PointF ToPointF()
+        public readonly Point ToPoint()
         {
-            return this;
+            return (Point) this;
         }
 
         public override readonly string ToString()
@@ -314,12 +317,12 @@ namespace Yolk.Geometry
             return new Microsoft.Xna.Framework.Vector2(X, Y);
         }
 
-        public void Translate(Point delta)
+        public void Translate(PointF delta)
         {
             Translate(delta.X, delta.Y);
         }
 
-        public void Translate(int dx, int dy)
+        public void Translate(float dx, float dy)
         {
             unchecked
             {

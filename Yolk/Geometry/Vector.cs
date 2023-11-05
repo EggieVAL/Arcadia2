@@ -25,9 +25,9 @@ namespace Yolk.Geometry
         {
         }
 
-        public Vector(Point from, Point to)
+        public Vector(PointF from, PointF to)
         {
-            Point difference = from - to;
+            PointF difference = from - to;
             X = difference.X;
             Y = difference.Y;
         }
@@ -41,11 +41,6 @@ namespace Yolk.Geometry
         public static Vector UnitY => new(0f, 1f);
 
         public readonly float Magnitude => MathF.Sqrt(DotProduct(this, this));
-
-        public static explicit operator Point(Vector vector)
-        {
-            return new Point(vector.X, vector.Y);
-        }
 
         public static implicit operator Microsoft.Xna.Framework.Vector2(Vector vector)
         {
@@ -665,12 +660,22 @@ namespace Yolk.Geometry
 
         public readonly Point ToPoint()
         {
-            return (Point) this;
+            return new Point((int) X, (int) Y);
         }
 
         public readonly Point ToPoint(bool inclusive)
         {
-            return new Point(X, Y, inclusive);
+            return new Point((int) X, (int) Y, inclusive);
+        }
+
+        public readonly PointF ToPointF()
+        {
+            return new PointF(X, Y);
+        }
+
+        public readonly PointF ToPointF(bool inclusive)
+        {
+            return new PointF(X, Y, inclusive);
         }
 
         public override readonly string ToString()

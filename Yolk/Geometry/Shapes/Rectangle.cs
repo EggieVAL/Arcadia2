@@ -11,7 +11,7 @@ namespace Yolk.Geometry.Shapes
     public struct Rectangle : IEquatable<Rectangle>
     {
         [DataMember]
-        public Point Center;
+        public PointF Point;
 
         [DataMember]
         public float Height;
@@ -19,15 +19,20 @@ namespace Yolk.Geometry.Shapes
         [DataMember]
         public float Width;
 
-        public Rectangle(float width, float height, Point center)
+        public Rectangle(PointF point, float width, float height)
         {
             Width = width;
             Height = height;
-            Center = center;
+            Point = point;
+        }
+
+        public Rectangle(float x, float y, float width, float height)
+            : this(new PointF(x, y), width, height)
+        {
         }
 
         public Rectangle(float width, float height)
-            : this(width, height, Point.Origin)
+            : this(PointF.Origin, width, height)
         {
         }
 
@@ -35,20 +40,20 @@ namespace Yolk.Geometry.Shapes
 
         public readonly List<Segment> Edges => ShapeFactory.CreateShape(Map);
 
-        public readonly List<Point> Map
+        public readonly List<PointF> Map
         {
             get
             {
-                float x = Center.X - (Width * 0.5f);
-                float y = Center.Y - (Height * 0.5f);
+                float x = Point.X;
+                float y = Point.Y;
 
-                return new List<Point>()
+                return new List<PointF>()
                 {
-                    new Point(x, y),
-                    new Point(x + Width, y),
-                    new Point(x + Width, y + Height),
-                    new Point(x, y + Height),
-                    new Point(x, y)
+                    new PointF(x, y),
+                    new PointF(x + Width, y),
+                    new PointF(x + Width, y + Height),
+                    new PointF(x, y + Height),
+                    new PointF(x, y)
                 };
             }
         }
@@ -58,7 +63,7 @@ namespace Yolk.Geometry.Shapes
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Rectangle rectangle, Rectangle other)
         {
-            return rectangle.Center == other.Center
+            return rectangle.Point == other.Point
                 && rectangle.Height == other.Height
                 && rectangle.Width == other.Width;
         }
@@ -69,7 +74,7 @@ namespace Yolk.Geometry.Shapes
             return !(rectangle == other);
         }
 
-        public readonly bool ContainsPoint(Point point)
+        public readonly bool ContainsPoint(PointF point)
         {
             return ContainsPoint(point.X, point.Y);
         }
@@ -81,7 +86,7 @@ namespace Yolk.Geometry.Shapes
 
             foreach (Segment edge in Edges)
             {
-                Point? intersect = Ray.Cast(ray, edge);
+                PointF? intersect = Ray.Cast(ray, edge);
                 edgesPassed += (intersect is null) ? 0 : 1;
             }
             return edgesPassed % 2 == 1;
@@ -103,7 +108,7 @@ namespace Yolk.Geometry.Shapes
             unchecked
             {
                 int hash = 13;
-                hash = (hash * 7) + Center.GetHashCode();
+                hash = (hash * 7) + Point.GetHashCode();
                 hash = (hash * 7) + Height.GetHashCode();
                 hash = (hash * 7) + Width.GetHashCode();
                 return hash;
@@ -112,7 +117,7 @@ namespace Yolk.Geometry.Shapes
 
         public readonly bool IsIdentical(Rectangle other)
         {
-            return Center.IsIdentical(other.Center)
+            return Point.IsIdentical(other.Point)
                 && Floats.IsEqual(Height, other.Height)
                 && Floats.IsEqual(Width, other.Width);
         }
@@ -125,17 +130,17 @@ namespace Yolk.Geometry.Shapes
 
         public override readonly string ToString()
         {
-            return $"{{Width:{Width}, Height:{Height}, Center:{Center}}}";
+            return $"{{Width:{Width}, Height:{Height}, Point:{Point}}}";
         }
 
-        public void Translate(Point delta)
+        public void Translate(PointF delta)
         {
-            Center.Translate(delta);
+            Point.Translate(delta);
         }
 
         public void Translate(float dx, float dy)
         {
-            Center.Translate(dx, dy);
+            Point.Translate(dx, dy);
         }
     }
 }

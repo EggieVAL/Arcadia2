@@ -9,18 +9,18 @@ namespace Yolk.Geometry.Shapes
     public struct Ellipse : IEquatable<Ellipse>
     {
         [DataMember]
-        public Point Center;
+        public PointF Center;
 
         [DataMember]
-        public Point Axis;
+        public PointF Axis;
 
-        public Ellipse(Point axis, Point center)
+        public Ellipse(PointF axis, PointF center)
         {
             Axis = axis;
             Center = center;
         }
 
-        public Ellipse(Point axis) : this(axis, Point.Origin)
+        public Ellipse(PointF axis) : this(axis, PointF.Origin)
         {
         }
 
@@ -84,15 +84,15 @@ namespace Yolk.Geometry.Shapes
             return !(ellipse == other);
         }
 
-        public readonly bool ContainsPoint(Point point)
+        public readonly bool ContainsPoint(PointF point)
         {
             point -= Center / Axis;
-            return Point.DotProduct(point, point) <= 1;
+            return PointF.DotProduct(point, point) <= 1;
         }
 
         public readonly bool ContainsPoint(float x, float y)
         {
-            return ContainsPoint(new Point(x, y));
+            return ContainsPoint(new PointF(x, y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -134,7 +134,7 @@ namespace Yolk.Geometry.Shapes
             return $"{{Axis:{Axis}, Center:{Center}}}";
         }
 
-        public void Translate(Point delta)
+        public void Translate(PointF delta)
         {
             Center.Translate(delta);
         }

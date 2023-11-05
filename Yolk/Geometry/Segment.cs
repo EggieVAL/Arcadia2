@@ -10,12 +10,12 @@ namespace Yolk.Geometry
     public struct Segment : IEquatable<Segment>
     {
         [DataMember]
-        public Point PointA;
+        public PointF PointA;
 
         [DataMember]
-        public Point PointB;
+        public PointF PointB;
 
-        public Segment(Point a, Point b)
+        public Segment(PointF a, PointF b)
         {
             PointA = a;
             PointB = b;
@@ -23,22 +23,22 @@ namespace Yolk.Geometry
 
         public Segment(float x1, float y1, float x2, float y2)
         {
-            PointA = new Point(x1, y1);
-            PointB = new Point(x2, y2);
+            PointA = new PointF(x1, y1);
+            PointB = new PointF(x2, y2);
         }
 
         public readonly float Slope
         {
             get
             {
-                Point delta = PointB - PointA;
+                PointF delta = PointB - PointA;
                 return Floats.IsEqual(delta.X, 0f)
                     ? float.PositiveInfinity
                     : delta.Y / delta.X;
             }
         }
 
-        public readonly float Length => Point.Distance(PointA, PointB);
+        public readonly float Length => PointF.Distance(PointA, PointB);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Segment left, Segment right)
@@ -68,16 +68,16 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Intersects(Segment segment, Segment other)
+        public static PointF? Intersects(Segment segment, Segment other)
         {
             if (IsParallel(segment, other))
             {
                 return null;
             }
 
-            Point dc = other.PointB - other.PointA;
-            Point ac = segment.PointA - other.PointA;
-            Point ba = segment.PointB - segment.PointA;
+            PointF dc = other.PointB - other.PointA;
+            PointF ac = segment.PointA - other.PointA;
+            PointF ba = segment.PointB - segment.PointA;
 
             float t = ((dc.X * ac.Y) - (dc.Y * ac.X)) / ((dc.Y * ba.X) - (dc.X * ba.Y));
             float u = (ac.X + (ba.X * t)) / dc.X;
@@ -127,10 +127,10 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Lerp(Segment segment, float amount)
+        public static PointF? Lerp(Segment segment, float amount)
         {
             return ValidDirection(segment, amount)
-                ? Point.Lerp(segment.PointA, segment.PointB, amount)
+                ? PointF.Lerp(segment.PointA, segment.PointB, amount)
                 : null;
         }
 
@@ -138,8 +138,8 @@ namespace Yolk.Geometry
         public static Segment ReflectOverXAxis(Segment segment)
         {
             return new Segment(
-                Point.ReflectOverXAxis(segment.PointA),
-                Point.ReflectOverXAxis(segment.PointB)
+                PointF.ReflectOverXAxis(segment.PointA),
+                PointF.ReflectOverXAxis(segment.PointB)
             );
         }
 
@@ -147,8 +147,8 @@ namespace Yolk.Geometry
         public static Segment ReflectOverYAxis(Segment segment)
         {
             return new Segment(
-                Point.ReflectOverYAxis(segment.PointA),
-                Point.ReflectOverYAxis(segment.PointB)
+                PointF.ReflectOverYAxis(segment.PointA),
+                PointF.ReflectOverYAxis(segment.PointB)
             );
         }
 
@@ -216,7 +216,7 @@ namespace Yolk.Geometry
             return $"{{PointA:{PointA}, PointB:{PointB}}}";
         }
 
-        public void Translate(Point delta)
+        public void Translate(PointF delta)
         {
             PointA.Translate(delta);
             PointB.Translate(delta);

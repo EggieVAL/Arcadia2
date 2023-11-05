@@ -10,18 +10,18 @@ namespace Yolk.Geometry
     public struct Ray : IEquatable<Ray>
     {
         [DataMember]
-        public Point Point;
+        public PointF Point;
 
         [DataMember]
         public Vector Direction;
 
-        public Ray(Point point, Vector direction)
+        public Ray(PointF point, Vector direction)
         {
             Point = point;
             Direction = direction;
         }
 
-        public Ray(Point from, Point to)
+        public Ray(PointF from, PointF to)
         {
             Point = from;
             Direction = (to - from).ToVector();
@@ -71,38 +71,38 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Cast(Ray ray, Line line)
+        public static PointF? Cast(Ray ray, Line line)
         {
             if (Floats.IsEqual(ray.Slope, line.Slope))
             {
                 return null;
             }
 
-            Point dc = line.PointB - line.PointA;
-            Point ac = ray.Point - line.PointA;
-            Point ba = ray.Direction.ToPoint();
+            PointF dc = line.PointB - line.PointA;
+            PointF ac = ray.Point - line.PointA;
+            PointF ba = ray.Direction.ToPointF();
 
             float t = ((dc.X * ac.Y) - (dc.Y * ac.X)) / ((dc.Y * ba.X) - (dc.X * ba.Y));
             return Lerp(ray, t);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Cast(Ray ray, Ray other)
+        public static PointF? Cast(Ray ray, Ray other)
         {
             return Intersects(ray, other);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Cast(Ray ray, Segment segment)
+        public static PointF? Cast(Ray ray, Segment segment)
         {
             if (Floats.IsEqual(ray.Slope, segment.Slope))
             {
                 return null;
             }
 
-            Point dc = segment.PointB - segment.PointA;
-            Point ac = ray.Point - segment.PointA;
-            Point ba = ray.Direction.ToPoint();
+            PointF dc = segment.PointB - segment.PointA;
+            PointF ac = ray.Point - segment.PointA;
+            PointF ba = ray.Direction.ToPointF();
 
             float t = ((dc.X * ac.Y) - (dc.Y * ac.X)) / ((dc.Y * ba.X) - (dc.X * ba.Y));
             float u = (ac.X + (ba.X * t)) / dc.X;
@@ -113,16 +113,16 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Intersects(Ray ray, Ray other)
+        public static PointF? Intersects(Ray ray, Ray other)
         {
             if (Vector.IsCollinear(ray.Direction, other.Direction))
             {
                 return null;
             }
 
-            Point dc = ray.Point + ray.Direction.ToPoint() - other.Point;
-            Point ac = ray.Point - other.Point;
-            Point ba = ray.Direction.ToPoint();
+            PointF dc = ray.Point + ray.Direction.ToPointF() - other.Point;
+            PointF ac = ray.Point - other.Point;
+            PointF ba = ray.Direction.ToPointF();
 
             float t = ((dc.X * ac.Y) - (dc.Y * ac.X)) / ((dc.Y * ba.X) - (dc.X * ba.Y));
             float u = (ac.X + (ba.X * t)) / dc.X;
@@ -171,10 +171,10 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point? Lerp(Ray ray, float amount)
+        public static PointF? Lerp(Ray ray, float amount)
         {
             return ValidDirection(ray, amount)
-                ? Point.Lerp(ray.Point, ray.Point + ray.Direction.ToPoint(), amount)
+                ? PointF.Lerp(ray.Point, ray.Point + ray.Direction.ToPointF(), amount)
                 : null;
         }
 
@@ -185,7 +185,7 @@ namespace Yolk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Ray PointEast(Point point)
+        public static Ray PointEast(PointF point)
         {
             return new Ray(point, Vector.UnitX);
         }
@@ -193,11 +193,11 @@ namespace Yolk.Geometry
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Ray PointEast(float x, float y)
         {
-            return PointEast(new Point(x, y));
+            return PointEast(new PointF(x, y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Ray PointNorth(Point point)
+        public static Ray PointNorth(PointF point)
         {
             return new Ray(point, -Vector.UnitY);
         }
@@ -205,11 +205,11 @@ namespace Yolk.Geometry
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Ray PointNorth(float x, float y)
         {
-            return PointNorth(new Point(x, y));
+            return PointNorth(new PointF(x, y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Ray PointNortheast(Point point)
+        public static Ray PointNortheast(PointF point)
         {
             return new Ray(point, new Vector(1f, -1f));
         }
@@ -217,11 +217,11 @@ namespace Yolk.Geometry
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Ray PointNortheast(float x, float y)
         {
-            return PointNortheast(new Point(x, y));
+            return PointNortheast(new PointF(x, y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Ray PointNorthwest(Point point)
+        public static Ray PointNorthwest(PointF point)
         {
             return new Ray(point, -Vector.Unit);
         }
@@ -229,11 +229,11 @@ namespace Yolk.Geometry
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Ray PointNorthwest(float x, float y)
         {
-            return PointNorthwest(new Point(x, y));
+            return PointNorthwest(new PointF(x, y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Ray PointSouth(Point point)
+        public static Ray PointSouth(PointF point)
         {
             return new Ray(point, Vector.UnitY);
         }
@@ -241,11 +241,11 @@ namespace Yolk.Geometry
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Ray PointSouth(float x, float y)
         {
-            return PointSouth(new Point(x, y));
+            return PointSouth(new PointF(x, y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Ray PointSoutheast(Point point)
+        public static Ray PointSoutheast(PointF point)
         {
             return new Ray(point, Vector.Unit);
         }
@@ -253,11 +253,11 @@ namespace Yolk.Geometry
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Ray PointSoutheast(float x, float y)
         {
-            return PointSoutheast(new Point(x, y));
+            return PointSoutheast(new PointF(x, y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Ray PointSouthwest(Point point)
+        public static Ray PointSouthwest(PointF point)
         {
             return new Ray(point, new Vector(-1f, 1f));
         }
@@ -265,11 +265,11 @@ namespace Yolk.Geometry
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Ray PointSouthwest(float x, float y)
         {
-            return PointSouthwest(new Point(x, y));
+            return PointSouthwest(new PointF(x, y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Ray PointWest(Point point)
+        public static Ray PointWest(PointF point)
         {
             return new Ray(point, -Vector.UnitX);
         }
@@ -277,7 +277,7 @@ namespace Yolk.Geometry
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Ray PointWest(float x, float y)
         {
-            return PointWest(new Point(x, y));
+            return PointWest(new PointF(x, y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -290,7 +290,7 @@ namespace Yolk.Geometry
         public static Ray ReflectOverXAxis(Ray ray)
         {
             return new Ray(
-                Point.ReflectOverXAxis(ray.Point),
+                PointF.ReflectOverXAxis(ray.Point),
                 Vector.ReflectOverXAxis(ray.Direction)
             );
         }
@@ -299,7 +299,7 @@ namespace Yolk.Geometry
         public static Ray ReflectOverYAxis(Ray ray)
         {
             return new Ray(
-                Point.ReflectOverYAxis(ray.Point),
+                PointF.ReflectOverYAxis(ray.Point),
                 Vector.ReflectOverYAxis(ray.Direction)
             );
         }
@@ -345,7 +345,7 @@ namespace Yolk.Geometry
             return $"{{Point:{Point}, Direction:{Direction}}}";
         }
 
-        public void Translate(Point delta)
+        public void Translate(PointF delta)
         {
             Point.Translate(delta);
         }
